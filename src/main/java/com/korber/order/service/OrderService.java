@@ -5,7 +5,9 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
+import com.korber.inventory.dto.InventoryReserveResponse;
 import com.korber.order.client.InventoryClient;
+import com.korber.order.dto.OrderResponse;
 import com.korber.order.entity.Order;
 import com.korber.order.repository.OrderRepository;
 
@@ -20,16 +22,27 @@ public class OrderService {
 		this.inventoryClient = inventoryClient;
 	}
 
-    public Order placeOrder(Long productId, int quantity) {
-        inventoryClient.reserve(productId, quantity);
+    public OrderResponse placeOrder(Long productId, int quantity) {
+    	
+    	InventoryReserveResponse reserveResponse = inventoryClient.reserve(productId, quantity);
 
         Order order = new Order();
         order.setProductId(productId);
         order.setQuantity(quantity);
         order.setStatus("PLACED");
         order.setOrderDate(LocalDate.now());
+        repository.save(order);
+        
+        OrderResponse response = new OrderResponse();
+        response.setOrderId(order.getOrderId());
+        response.setProductId(order.getProductId());
+        response.setProductName(reserveResponse.getProductName());
+        response.setQuantity(order.getQuantity());
+        response.setStatus(order.getStatus());
+        response.setReservedFromBatchIds(reserveResponse.getReservedBatchIds());
+        response.setMessage("Order placed. Inventory reserved.");
 
-        return repository.save(order);
+        return response;
     }
     
 }

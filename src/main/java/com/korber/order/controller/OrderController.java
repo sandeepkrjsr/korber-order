@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.korber.order.dto.OrderRequest;
-import com.korber.order.entity.Order;
+import com.korber.order.dto.OrderResponse;
 import com.korber.order.service.OrderService;
 
 @RestController
@@ -20,7 +20,7 @@ public class OrderController {
 	}
 
     @PostMapping
-    public Order placeOrder(@RequestBody OrderRequest request) {
+    public OrderResponse placeOrder(@RequestBody OrderRequest request) {
         return service.placeOrder(request.getProductId(), request.getQuantity());
     }
 

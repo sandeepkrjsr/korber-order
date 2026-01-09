@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.korber.inventory.dto.InventoryReserveResponse;
+
 @Component
 public class InventoryClient {
 
@@ -15,11 +17,12 @@ public class InventoryClient {
 		this.restTemplate = restTemplate;
 	}
 
-    public void reserve(Long productId, int quantity) {
-        restTemplate.postForObject(
-                "http://localhost:8081/inventory/update",
-                Map.of("productId", productId, "quantity", quantity),
-                Void.class
-        );
+    public InventoryReserveResponse reserve(Long productId, int quantity) {
+        return  restTemplate.postForObject(
+        			"http://localhost:8081/inventory/update",
+        			Map.of("productId", productId, "quantity", quantity),
+        			InventoryReserveResponse.class
+        		);
     }
+    
 }
